@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace simone98dm.playlist.lib.Models
 {
-    public class SpotifyCreatePlaylistResponse
+    public class CreatePlaylistResponse
     {
         public bool collaborative { get; set; }
         public string description { get; set; }

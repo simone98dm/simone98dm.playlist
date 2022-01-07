@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace simone98dm.playlist.lib.Models
 {
 
-    public class SpotifySongInfoResponse
+    public class TrackInfoResponse
     {
         public Tracks tracks { get; set; }
     }

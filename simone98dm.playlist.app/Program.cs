@@ -38,7 +38,7 @@ void ValidatePath(string? path)
         throw new Exception("Path not found!");
     }
 }
-void ValidateUserCredentials(string? userToken, string? _userId)
+void ValidateUserCredentials(string? _userToken, string? _userId)
 {
     if (string.IsNullOrWhiteSpace(_userToken))
     {
