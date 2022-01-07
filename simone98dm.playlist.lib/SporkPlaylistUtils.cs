@@ -67,15 +67,14 @@ namespace simone98dm.playlist.lib
 
         public async Task<List<string>> GetFileList(string? path)
         {
-            List<string> songs = new List<string>();
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
 
+            List<string> songs = new List<string>();
             try
             {
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    throw new ArgumentNullException(nameof(path));
-                }
-
                 IEnumerable<string>? files = Directory.EnumerateFiles(path, "*.mp3", SearchOption.AllDirectories);
 
                 Info($"Retrieve songs info ({files.Count()} songs to search)");
@@ -126,6 +125,16 @@ namespace simone98dm.playlist.lib
 
         public async Task AddSongsToPlaylist(string? playlistId, List<string> songs)
         {
+            if (string.IsNullOrWhiteSpace(playlistId))
+            {
+                throw new ArgumentNullException(nameof(playlistId));
+            }
+
+            if (songs.Any())
+            {
+                return;
+            }
+
             try
             {
                 Info("Adding songs to playlist...");
