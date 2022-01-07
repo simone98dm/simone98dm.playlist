@@ -130,7 +130,7 @@ namespace simone98dm.playlist.lib
                 throw new ArgumentNullException(nameof(playlistId));
             }
 
-            if (songs.Any())
+            if (!songs.Any())
             {
                 return;
             }
