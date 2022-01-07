@@ -82,7 +82,7 @@ namespace simone98dm.playlist.lib
                 List<string> titles = files
                     .Select(file => Path.GetFileName(file))
                     .Select(file => file.Replace(Path.GetExtension(file), string.Empty))
-                    .Select(file => file.Substring(5, file.Length - 5))
+                    //.Select(file => file.Substring(5, file.Length - 5)) // added for my case which has "01 - " text before the song title
                     .ToList();
 
                 ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 3 };
