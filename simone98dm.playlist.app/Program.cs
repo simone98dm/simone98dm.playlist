@@ -1,30 +1,35 @@
 ﻿using simone98dm.playlist.lib;
 
-/*
- * How to:
- * 1. ask user folder
- * 2. request info for each songs
- * 3. create playlist
- * 4. add songs
- * 5. profit
- */
+List<string> paths = args.ToList();
+if (paths.Count <= 0)
+{
+    Console.WriteLine("Give me the folder path:");
+    string? path = Console.ReadLine();
+    if (path == null)
+    {
+        return;
+    }
+    paths.Add(path);
+}
 
-Console.WriteLine("Give me the path:");
-string? path = Console.ReadLine();
-ValidatePath(path);
+foreach (string path in paths)
+{
+    Log.Info($"Reading '{path}'");
+    ValidatePath(path);
 
-string _userToken = "";
-string _userId = "";
-ValidateUserCredentials(_userToken, _userId);
+    string _userToken = "";
+    string _userId = "";
+    ValidateUserCredentials(_userToken, _userId);
 
-SporkPlaylistUtils playlistUtils = new SporkPlaylistUtils(_userId, _userToken);
+    SporkPlaylistUtils playlistUtils = new SporkPlaylistUtils(_userId, _userToken);
 
-List<string> songsUris = await playlistUtils.GetFileList(path);
+    List<string> songsUris = await playlistUtils.GetFileList(path);
 
-string title = $"Playlist-#{new Random().Next(1, 100)}";
-string? playlistid = await playlistUtils.CreateNewPlaylist(title);
+    string title = $"Playlist-#{new Random().Next(1, 100)}";
+    string? playlistid = await playlistUtils.CreateNewPlaylist(title);
 
-await playlistUtils.AddSongsToPlaylist(playlistid, songsUris);
+    await playlistUtils.AddSongsToPlaylist(playlistid, songsUris);
+}
 
 void ValidatePath(string? path)
 {
@@ -38,6 +43,7 @@ void ValidatePath(string? path)
         throw new Exception("Path not found!");
     }
 }
+
 void ValidateUserCredentials(string? _userToken, string? _userId)
 {
     if (string.IsNullOrWhiteSpace(_userToken))
