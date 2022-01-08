@@ -22,7 +22,7 @@ namespace simone98dm.playlist.lib
                 Log.Info($"Creating playlist '{title}'");
                 PlaylistOptions playlistOpt = new()
                 {
-                    description = "Songs from your local folder! by simone98dm",
+                    description = "Songs from your local folder! sync by simone98dm",
                     name = title,
                     _public = false
                 };
@@ -58,7 +58,7 @@ namespace simone98dm.playlist.lib
             {
                 IEnumerable<string>? files = Directory.EnumerateFiles(path, "*.mp3", SearchOption.AllDirectories);
 
-                Log.Info($"Retrieve songs info ({files.Count()} songs to search)");
+                Log.Info($"Retrieve tracks info ({files.Count()} tracks to search)");
                 List<string> titles = files
                     .Select(file => Path.GetFileName(file))
                     .Select(file => file.Replace(Path.GetExtension(file), string.Empty))
@@ -78,7 +78,7 @@ namespace simone98dm.playlist.lib
                         }
                         else
                         {
-                            Log.Warning($"Songs '{title}' not found on Spotify");
+                            Log.Warning($"Track '{title}' not found on Spotify");
                         }
                     }
                 });
@@ -105,7 +105,7 @@ namespace simone98dm.playlist.lib
 
             try
             {
-                Log.Info("Adding songs to playlist...");
+                Log.Info("Adding tracks to playlist...");
                 AddSongsPlaylistReponse? response = await _playlist.AddSongsAsync(playlistId, songs.ToArray());
                 Log.Success("Songs added successfully!");
             }
