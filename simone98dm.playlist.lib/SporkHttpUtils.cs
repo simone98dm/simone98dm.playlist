@@ -32,8 +32,8 @@ namespace simone98dm.playlist.lib
         {
             NameValueCollection? queryParam = HttpUtility.ParseQueryString(string.Empty);
             queryParam.Add("q", HttpUtility.UrlEncode(title));
-            queryParam.Add("type", "track");
-            queryParam.Add("limit", "1");
+            queryParam.Add("type", track);
+            queryParam.Add("limit", limit);
 
             TrackInfoResponse? trackInfo = await RetryAfter<TrackInfoResponse?>(
                 async () => await _client.GetAsync($"https://api.spotify.com/v1/search?{queryParam}"),
@@ -56,6 +56,7 @@ namespace simone98dm.playlist.lib
         public async Task<AddSongsPlaylistReponse?> AddSongsAsync(string playlistId, params string[] songsUri)
         {
             string? uris = string.Join(",", songsUri);
+            
             NameValueCollection? queryParams = HttpUtility.ParseQueryString(string.Empty);
             queryParams.Add("uris", uris);
 
@@ -76,9 +77,10 @@ namespace simone98dm.playlist.lib
 
             HttpResponseMessage? response = await func.Invoke();
             _retryCount++;
+            string? contentResponse = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                T? parsedContent = JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+                T? parsedContent = JsonConvert.DeserializeObject<T>(contentResponse);
                 if (parsedContent == null)
                 {
                     _retryCount = 0;
@@ -92,13 +94,18 @@ namespace simone98dm.playlist.lib
                     return parsedContent;
                 }
             }
-
-            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            else
             {
-                Log.Warning("Max limit reached, waiting 30s...");
-                Thread.Sleep(ms);
-                return await RetryAfter<T>(func, validCondition);
-
+                if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    Log.Warning("Max limit reached, waiting 30s...");
+                    Thread.Sleep(ms);
+                    return await RetryAfter<T>(func, validCondition);
+                }
+                else
+                {
+                    Log.Error(contentResponse);
+                }
             }
 
             _retryCount = 0;
