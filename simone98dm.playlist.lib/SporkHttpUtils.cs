@@ -32,7 +32,7 @@ namespace simone98dm.playlist.lib
         {
             NameValueCollection? queryParam = HttpUtility.ParseQueryString(string.Empty);
             queryParam.Add("q", HttpUtility.UrlEncode(title));
-            queryParam.Add("type", track);
+            queryParam.Add("type", type);
             queryParam.Add("limit", limit);
 
             TrackInfoResponse? trackInfo = await RetryAfter<TrackInfoResponse?>(
